@@ -10,6 +10,7 @@ class Hbkit < Formula
 
   depends_on "cryptography" => :no_linkage
   depends_on "libsodium"
+  depends_on "lz4"
   depends_on "python@3.13"
 
   pypi_packages exclude_packages: ["cryptography"]
@@ -79,11 +80,21 @@ class Hbkit < Formula
     sha256 "c53691e495c8db60e16ffc4861a35469b0ba0821fe409a8a7a0a71864d33a811"
   end
 
+  def lz4_library
+    formula_opt_lib("lz4")/shared_library("liblz4")
+  end
+
   def install
     # Link PyNaCl against the libsodium formula instead of building the copy
     # vendored in its sdist, which needs autotools and adds minutes to the build.
     ENV["SODIUM_INSTALL"] = "system"
     virtualenv_install_with_resources
+
+    # hbkit dlopen()s liblz4 by searching a list of well-known paths. Pin it to the
+    # lz4 formula so it also resolves under a non-default prefix and on Linux.
+    %w[hbk hbk-tui].each do |exe|
+      (bin/exe).write_env_script libexec/"bin"/exe, HBK_LZ4: lz4_library
+    end
   end
 
   test do
@@ -94,5 +105,11 @@ class Hbkit < Formula
     (testpath/"not-an-archive").mkpath
     output = shell_output("#{bin}/hbk #{testpath}/not-an-archive doctor 2>&1", 1)
     refute_match "Traceback", output
+
+    # liblz4 is bound lazily at first use, so nothing above would notice a broken
+    # link. Force the bind.
+    with_env(HBK_LZ4: lz4_library) do
+      system libexec/"bin/python", "-c", "import hbkit.archive as a; a.lz4()"
+    end
   end
 end
