@@ -49,9 +49,10 @@ jobs:
       - run: brew test-bot --only-setup
 
       - run: brew test-bot --only-tap-syntax
-      # Also on push: this tap is maintained by pushing straight to main, so
-      # PR-only builds would leave every formula change unverified.
-      - run: brew test-bot --only-formulae
+      # tap-new gates this on pull_request and lets test-bot infer which formulae
+      # changed. This tap is maintained by pushing to main and holds one formula, so
+      # build it every time instead: a green run then always means a real install.
+      - run: brew test-bot --only-formulae --skip-online-checks hbkit
 
       - name: Upload bottles as artifact
         if: always() && github.event_name == 'pull_request'
