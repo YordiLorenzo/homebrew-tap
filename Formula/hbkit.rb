@@ -93,6 +93,7 @@ class Hbkit < Formula
     # hbkit dlopen()s liblz4 by searching a list of well-known paths. Pin it to the
     # lz4 formula so it also resolves under a non-default prefix and on Linux.
     %w[hbk hbk-tui].each do |exe|
+      (bin/exe).unlink                                  # the venv already linked it
       (bin/exe).write_env_script libexec/"bin"/exe, HBK_LZ4: lz4_library
     end
   end
