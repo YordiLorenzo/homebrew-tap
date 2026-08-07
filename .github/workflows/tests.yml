@@ -49,8 +49,9 @@ jobs:
       - run: brew test-bot --only-setup
 
       - run: brew test-bot --only-tap-syntax
+      # Also on push: this tap is maintained by pushing straight to main, so
+      # PR-only builds would leave every formula change unverified.
       - run: brew test-bot --only-formulae
-        if: github.event_name == 'pull_request'
 
       - name: Upload bottles as artifact
         if: always() && github.event_name == 'pull_request'
