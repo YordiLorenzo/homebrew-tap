@@ -3,8 +3,8 @@ class Hbkit < Formula
 
   desc "Recover files from Synology Hyper Backup (.hbk) archives"
   homepage "https://github.com/YordiLorenzo/hbkit"
-  url "https://files.pythonhosted.org/packages/d2/9b/b1f84a33acd8a4e34e231bc9f7feec4bd2a3b289d5b92c6c9923539d5f4e/hbkit-0.4.6.tar.gz"
-  sha256 "62486588b1b0d212cca76af49dbb5312642caa62a538087425346a5b1f9b07e6"
+  url "https://files.pythonhosted.org/packages/d2/83/c21a9de91ba3c59b9045fecd1bd94e14fe8fd0f420d9f9932f6d0ca99506/hbkit-0.4.7.tar.gz"
+  sha256 "a5ad5f524cfcd4ab75b40f484435e54fcae3e30fd64bb878705c8a3eedce3756"
   license "MIT"
   head "https://github.com/YordiLorenzo/hbkit.git", branch: "main"
 
